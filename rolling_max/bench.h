@@ -51,4 +51,43 @@ double* bench_lf( double* (*funcToBench)(double *array, U_INT window, U_INT size
 double* bench_f( float* (*funcToBench)(float *array, U_INT window, U_INT size), double benchDuration, U_INT nbRuns, U_INT nbSamples, U_INT window, U_INT sizeOfArray, U_INT *nbLoopPerRun);
 
 
+
+
+
+/// @brief for the in place version of the function
+/// @param funcToBench the function that will be benched
+/// @param benchDuration the aproximative duration of the total bench
+/// @param nbRuns the number of bench run to do (the array will be randomized each time)
+/// @param nbSamples the number of unique run, in order to determinate the number of loops per bench run
+/// @param window the size of the window used in the benchmark
+/// @param sizeOfArray the size of the test array generated
+/// @param nbLoopPerRun is a pointer to get the number of loops per run (if NULL given, ignore) 
+/// @return return the average time of each run
+double* bench_ip_int( void (*funcToBench)(int *array, U_INT window, U_INT size, int *array_out), double benchDuration, U_INT nbRuns, U_INT nbSamples, U_INT window, U_INT sizeOfArray, U_INT *nbLoopPerRun);
+
+/// @brief for the in place version of the function
+/// @param funcToBench the function that will be benched
+/// @param benchDuration the aproximative duration of the total bench
+/// @param nbRuns the number of bench run to do (the array will be randomized each time)
+/// @param nbSamples the number of unique run, in order to determinate the number of loops per bench run
+/// @param window the size of the window used in the benchmark
+/// @param sizeOfArray the size of the test array generated
+/// @param nbLoopPerRun is a pointer to get the number of loops per run (if NULL given, ignore) 
+/// @return return the average time of each run
+double* bench_ip_lf( void (*funcToBench)(double *array, U_INT window, U_INT size, double *array_out), double benchDuration, U_INT nbRuns, U_INT nbSamples, U_INT window, U_INT sizeOfArray, U_INT *nbLoopPerRun);
+
+/// @brief for the in place version of the function
+/// @param funcToBench the function that will be benched
+/// @param benchDuration the aproximative duration of the total bench
+/// @param nbRuns the number of bench run to do (the array will be randomized each time)
+/// @param nbSamples the number of unique run, in order to determinate the number of loops per bench run
+/// @param window the size of the window used in the benchmark
+/// @param sizeOfArray the size of the test array generated
+/// @param nbLoopPerRun is a pointer to get the number of loops per run (if NULL given, ignore) 
+/// @return return the average time of each run
+double* bench_ip_f( void (*funcToBench)(float *array, U_INT window, U_INT size, float *array_out), double benchDuration, U_INT nbRuns, U_INT nbSamples, U_INT window, U_INT sizeOfArray, U_INT *nbLoopPerRun);
+
+
+
+
 #endif /* BENCH_H */

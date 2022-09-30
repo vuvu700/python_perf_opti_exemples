@@ -1,7 +1,7 @@
 
-import bench
 from rolling_max import *
 from typing import Callable
+import timeit
 
 # setup and test function
 
@@ -17,12 +17,29 @@ def testSameResults(listFuncs:"list[Callable[[numpy.ndarray, int], numpy.ndarray
             return False
         return True
 
+def bench(statements:"dict[str, str]", nbSecPerTest:int,
+          nbRepeat:int, nbSamples:int)->None:
+    results = []
+    for name, statement in statements.items():
+        print(name, end=" ")
+        samplesRun = timeit.timeit(statement, globals=globals(), number=nbSamples)
+        nbLoopsPerRun = int(max((nbSecPerTest / (samplesRun/nbSamples) / nbRepeat), 1))
+        resRuns = timeit.repeat(statement, globals=globals(), repeat=nbRepeat, number=nbLoopsPerRun)
+        resRuns = numpy.array(resRuns) / nbLoopsPerRun
+        avg, std = numpy.average(resRuns), numpy.std(resRuns)
+        print(f"{avg*1e6:_.2f} \u00b5s \u00b1 {std*1e6:_.2f} \u00b5s (mean \u00b1 stdDev, with {nbRepeat} runs, {nbLoopsPerRun} loop each run)")
+        results.append([avg, name])
+    sumResults = sum([t for t,_ in results])
+    print(f"cum time={sumResults} sec")
+    print("\n[avg time, % of cumtime, name]")
+    res = sorted([[round(v, 6), round(100*v/sumResults, 2), name] for v, name in results])
+    for line in res:
+        print(line)
 
 
 
-
+# test if all function give the same results
 testSerie = numpy.random.random( (5000, ) )
-
 allSeriesEqual = testSameResults([rollingMax_py, rollingMax_numba,
                  rollingMax2_py, rollingMax2_numba,
                  rollingMax3_py, rollingMax3_numba,
@@ -43,7 +60,9 @@ listOfCalcs = {
     "R4_numba" : "rollingMax4_numba(testSerie, 10)",
 }
 
-bench.bench(listOfCalcs, nbSecPerTest=10, nbRepeat=20, nbSamples=10)
+sizeArray = 5000
+testSerie = numpy.random.random( (sizeArray, ) )
+bench(listOfCalcs, nbSecPerTest=10, nbRepeat=20, nbSamples=10)
 
 
 

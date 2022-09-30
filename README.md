@@ -3,5 +3,5 @@ a repository that show exemples of how to write your code in python, in order to
 for exemples, by using numpy and numba
 
 # dependencies
-- numba
+each exemple is independent so the dependencies will vary for each exemple
 

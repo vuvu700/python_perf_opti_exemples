@@ -182,3 +182,140 @@ double* bench_f( float* (*funcToBench)(float *array, U_INT window, U_INT size), 
     free(array_test);
     return average_SumTimeElapsed_perRuns;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+double* bench_ip_int( void (*funcToBench)(int *array, U_INT window, U_INT size, int *array_out), double benchDuration, U_INT nbRuns, U_INT nbSamples, U_INT window, U_INT sizeOfArray, U_INT *nbLoopPerRun) {
+    U_INT index;
+    int *array_test = generateRandomArray_int(sizeOfArray);
+    int *array_func_out = createNewArray_int(sizeOfArray);
+
+    // run the sampling to estimate how much loops to do every run
+    double sumTimeElapsed = 0.;
+    double t_start;
+    for (index = 0; index < nbSamples; index++) {
+        t_start = perf_counter();
+        funcToBench(array_test, window, sizeOfArray, array_func_out);
+        sumTimeElapsed += perf_counter() - t_start;
+    }
+
+    int nbLoops = (int)(benchDuration / (sumTimeElapsed/(double)nbSamples) / nbRuns);
+    if (nbLoops <= 0) {nbLoops = 1;}
+    if (nbLoopPerRun != NULL) {
+        *(nbLoopPerRun) = (U_INT)nbLoops;
+    }
+
+
+    // do the complet bench
+    U_INT runCount;
+    double *average_SumTimeElapsed_perRuns = createNewArray_lf(nbRuns);
+    for (runCount = 0; runCount < nbRuns; runCount++) {
+
+        // each run
+        randomizeArray_int(array_test, sizeOfArray); // different array for each run
+        sumTimeElapsed = 0.;
+        for (index = 0; index < nbLoops; index++) {
+            t_start = perf_counter();
+            funcToBench(array_test, window, sizeOfArray, array_func_out);
+            sumTimeElapsed += perf_counter() - t_start;
+        }
+        average_SumTimeElapsed_perRuns[runCount] = sumTimeElapsed / (double)nbLoops;
+    }
+    
+    free(array_test);
+    return average_SumTimeElapsed_perRuns;
+}
+
+
+double* bench_ip_lf( void (*funcToBench)(double *array, U_INT window, U_INT size, double *array_out), double benchDuration, U_INT nbRuns, U_INT nbSamples, U_INT window, U_INT sizeOfArray, U_INT *nbLoopPerRun) {
+    U_INT index;
+    double *array_test = generateRandomArray_lf(sizeOfArray);
+    double *array_func_out = createNewArray_lf(sizeOfArray);
+
+    // run the sampling to estimate how much loops to do every run
+    double sumTimeElapsed = 0.;
+    double t_start;
+    for (index = 0; index < nbSamples; index++) {
+        t_start = perf_counter();
+        funcToBench(array_test, window, sizeOfArray, array_func_out);
+        sumTimeElapsed += perf_counter() - t_start;
+    }
+    int nbLoops = (int)(benchDuration / (sumTimeElapsed/(double)nbSamples) / nbRuns);
+    if (nbLoops <= 0) {nbLoops = 1;}
+    if (nbLoopPerRun != NULL) {
+        *(nbLoopPerRun) = (U_INT)nbLoops;
+    }
+
+    // do the complet bench
+    U_INT runCount;
+    double *average_SumTimeElapsed_perRuns = createNewArray_lf(nbRuns);
+    for (runCount = 0; runCount < nbRuns; runCount++) {
+
+        // each run
+        randomizeArray_lf(array_test, sizeOfArray); // different array for each run
+        sumTimeElapsed = 0.;
+        for (index = 0; index < nbLoops; index++) {
+            t_start = perf_counter();
+            funcToBench(array_test, window, sizeOfArray, array_func_out);
+            sumTimeElapsed += perf_counter() - t_start;
+        }
+        average_SumTimeElapsed_perRuns[runCount] = sumTimeElapsed / (double)nbLoops;
+    }
+    
+    free(array_test);
+    return average_SumTimeElapsed_perRuns;
+}
+
+
+
+double* bench_ip_f( void (*funcToBench)(float *array, U_INT window, U_INT size, float *array_out), double benchDuration, U_INT nbRuns, U_INT nbSamples, U_INT window, U_INT sizeOfArray, U_INT *nbLoopPerRun) {
+    U_INT index;
+    float *array_test = generateRandomArray_f(sizeOfArray);
+    float *array_func_out = createNewArray_f(sizeOfArray);
+
+    // run the sampling to estimate how much loops to do every run
+    double sumTimeElapsed = 0.;
+    double t_start;
+    for (index = 0; index < nbSamples; index++) {
+        t_start = perf_counter();
+        funcToBench(array_test, window, sizeOfArray, array_func_out);
+        sumTimeElapsed += perf_counter() - t_start;
+    }
+    int nbLoops = (int)(benchDuration / (sumTimeElapsed/(double)nbSamples) / nbRuns);
+    if (nbLoops <= 0) {nbLoops = 1;}
+    if (nbLoopPerRun != NULL) {
+        *(nbLoopPerRun) = (U_INT)nbLoops;
+    }
+
+    // do the complet bench
+    U_INT runCount;
+    double *average_SumTimeElapsed_perRuns = createNewArray_lf(nbRuns);
+    for (runCount = 0; runCount < nbRuns; runCount++) {
+
+        // each run
+        randomizeArray_f(array_test, sizeOfArray); // different array for each run
+        sumTimeElapsed = 0.;
+        for (index = 0; index < nbLoops; index++) {
+            t_start = perf_counter();
+            funcToBench(array_test, window, sizeOfArray, array_func_out);
+            sumTimeElapsed += perf_counter() - t_start;
+        }
+        average_SumTimeElapsed_perRuns[runCount] = sumTimeElapsed / (double)nbLoops;
+    }
+    
+    free(array_test);
+    return average_SumTimeElapsed_perRuns;
+}
