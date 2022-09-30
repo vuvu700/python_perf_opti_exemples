@@ -1,7 +1,6 @@
 # python_perf_opti_exemples
-a repository that show exemples of how to write your code in python, in order to make it way faster
-for exemples, by using numpy and numba
+a repository that show exemples of how you can write your code in python, in order to make it way faster, with some C comparaison, benchmarks, etc..
 
-# dependencies
+# dependencies ?
 each exemple is independent so the dependencies will vary for each exemple
 
