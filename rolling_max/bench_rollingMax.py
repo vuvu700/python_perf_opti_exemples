@@ -18,12 +18,15 @@ def testSameResults(listFuncs:"list[Callable[[numpy.ndarray, int], numpy.ndarray
         return True
 
 def bench(statements:"dict[str, str]", nbSecPerTest:int,
-          nbRepeat:int, nbSamples:int)->None:
+          nbRepeat:int, nbSamples:int,
+          sizeOfArray:int)->None:
+    global testSerie # in order to randomize the array
     results = []
     for name, statement in statements.items():
         print(name, end=" ")
         samplesRun = timeit.timeit(statement, globals=globals(), number=nbSamples)
         nbLoopsPerRun = int(max((nbSecPerTest / (samplesRun/nbSamples) / nbRepeat), 1))
+        testSerie = numpy.random.random((sizeOfArray, ))
         resRuns = timeit.repeat(statement, globals=globals(), repeat=nbRepeat, number=nbLoopsPerRun)
         resRuns = numpy.array(resRuns) / nbLoopsPerRun
         avg, std = numpy.average(resRuns), numpy.std(resRuns)
@@ -40,7 +43,7 @@ def bench(statements:"dict[str, str]", nbSecPerTest:int,
 
 # test if all function give the same results
 testSerie = numpy.random.random( (5000, ) )
-allSeriesEqual = testSameResults([rollingMax_py, rollingMax_numba,
+allSeriesEqual = testSameResults([rollingMax1_py, rollingMax1_numba,
                  rollingMax2_py, rollingMax2_numba,
                  rollingMax3_py, rollingMax3_numba,
                  rollingMax4_py, rollingMax4_numba,
@@ -49,20 +52,22 @@ allSeriesEqual = testSameResults([rollingMax_py, rollingMax_numba,
 assert allSeriesEqual, "some series aren't equal"
 print("all results are the same")
 
+
+
+
+windowSize = 10
 listOfCalcs = {
-    "R1_py" : "rollingMax_py(testSerie, 10)",
-    "R1_numba" : "rollingMax_numba(testSerie, 10)",
-    "R2_py" : "rollingMax2_py(testSerie, 10)",
-    "R2_numba" : "rollingMax2_numba(testSerie, 10)",
-    "R3_py" : "rollingMax3_py(testSerie, 10)",
-    "R3_numba" : "rollingMax3_numba(testSerie, 10)",
-    "R4_py" : "rollingMax4_py(testSerie, 10)",
-    "R4_numba" : "rollingMax4_numba(testSerie, 10)",
+    "R1_py"    : f"rollingMax1_py(testSerie, {windowSize})",
+    "R1_numba" : f"rollingMax1_numba(testSerie, {windowSize})",
+    "R2_py"    : f"rollingMax2_py(testSerie, {windowSize})",
+    "R2_numba" : f"rollingMax2_numba(testSerie, {windowSize})",
+    "R3_py"    : f"rollingMax3_py(testSerie, {windowSize})",
+    "R3_numba" : f"rollingMax3_numba(testSerie, {windowSize})",
+    "R4_py"    : f"rollingMax4_py(testSerie, {windowSize})",
+    "R4_numba" : f"rollingMax4_numba(testSerie, {windowSize})",
+    "R5_py"    : f"rollingMax5_py(testSerie, {windowSize})",
+    "R5_numba" : f"rollingMax5_numba(testSerie, {windowSize})",
 }
 
-sizeArray = 5000
-testSerie = numpy.random.random( (sizeArray, ) )
-bench(listOfCalcs, nbSecPerTest=10, nbRepeat=20, nbSamples=10)
-
-
+bench(listOfCalcs, nbSecPerTest=10, nbRepeat=20, nbSamples=20, sizeOfArray=5000)
 

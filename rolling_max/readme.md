@@ -16,6 +16,6 @@ if you dont whant to tune the benchmarks yoursel, they are alredy tuned to :
 - the array is 5000 elements long
 - the rolling window is 10 long
 
-for the python version : the parameters ar at line 63 to 65<br>
+for the python version : the parameters ar at line 58 and 72<br>
 for the C version : the parameters ar at line 16 to 23<br>
 
